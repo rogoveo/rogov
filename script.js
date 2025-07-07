@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function updateOnScroll() {
         highlightCurrentSection();
+        animateOnScroll();
         ticking = false;
     }
     
@@ -63,31 +64,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Копирование контактов в буфер обмена
-    const contactLinks = document.querySelectorAll('.contact-link');
+    // Копирование номера телефона в буфер обмена
+    const phoneElement = document.querySelector('.phone');
     
-    contactLinks.forEach(link => {
-        // Для телефонных номеров добавляем возможность копирования
-        if (link.href.startsWith('tel:')) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const phoneNumber = this.textContent;
-                
-                // Копируем в буфер обмена
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(phoneNumber).then(() => {
-                        showNotification('Номер телефона скопирован в буфер обмена');
-                    }).catch(() => {
-                        // Fallback для старых браузеров
-                        copyToClipboardFallback(phoneNumber);
-                    });
-                } else {
+    if (phoneElement) {
+        phoneElement.addEventListener('click', function() {
+            const phoneNumber = this.getAttribute('data-phone');
+            
+            // Копируем в буфер обмена
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(phoneNumber).then(() => {
+                    showNotification('Номер телефона скопирован в буфер обмена');
+                }).catch(() => {
+                    // Fallback для старых браузеров
                     copyToClipboardFallback(phoneNumber);
-                }
-            });
-        }
-    });
+                });
+            } else {
+                copyToClipboardFallback(phoneNumber);
+            }
+        });
+    }
     
     // Fallback для копирования в старых браузерах
     function copyToClipboardFallback(text) {
@@ -113,41 +109,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // Показ уведомлений
     function showNotification(message) {
         // Удаляем существующие уведомления
-        const existingNotification = document.querySelector('.notification');
+        const existingNotification = document.querySelector('.copy-notification');
         if (existingNotification) {
             existingNotification.remove();
         }
         
         const notification = document.createElement('div');
-        notification.className = 'notification';
+        notification.className = 'copy-notification';
         notification.textContent = message;
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--black);
-            color: var(--white);
-            padding: 1rem 1.5rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            z-index: 1000;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: all 0.3s ease;
-        `;
         
         document.body.appendChild(notification);
         
         // Анимация появления
         setTimeout(() => {
-            notification.style.opacity = '1';
-            notification.style.transform = 'translateY(0)';
+            notification.classList.add('show');
         }, 100);
         
         // Удаление через 3 секунды
         setTimeout(() => {
-            notification.style.opacity = '0';
-            notification.style.transform = 'translateY(-20px)';
+            notification.classList.remove('show');
             setTimeout(() => {
                 if (notification.parentNode) {
                     notification.parentNode.removeChild(notification);
@@ -156,88 +136,207 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
     
+    // Анимация элементов при прокрутке
+    function animateOnScroll() {
+        const elements = document.querySelectorAll('.timeline-item, .portfolio-item, .service-card');
+        
+        elements.forEach(element => {
+            if (element.classList.contains('visible')) return;
+            
+            const elementTop = element.offsetTop;
+            const elementHeight = element.offsetHeight;
+            const windowHeight = window.innerHeight;
+            const scrollTop = window.pageYOffset;
+            
+            if (scrollTop + windowHeight > elementTop + elementHeight / 4) {
+                const delay = element.getAttribute('data-delay') || 0;
+                
+                setTimeout(() => {
+                    element.classList.add('visible');
+                }, delay);
+            }
+        });
+    }
+    
     // Инициализация активной секции при загрузке
     highlightCurrentSection();
+    
+    // Запуск анимации при загрузке
+    animateOnScroll();
     
     // Взаимодействие с портфолио
     const portfolioItems = document.querySelectorAll('.portfolio-item');
     
     portfolioItems.forEach(item => {
         item.addEventListener('click', function() {
-            const projectTitle = this.querySelector('h3').textContent;
+            const projectTitle = this.querySelector('.portfolio-title').textContent;
             showNotification(`Подробности проекта "${projectTitle}" скоро будут доступны`);
         });
     });
     
-    // Добавляем стили для активной навигации
+    // Обработка внешних ссылок
+    const externalLinks = document.querySelectorAll('a[target="_blank"]');
+    
+    externalLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Добавляем небольшую задержку для лучшего UX
+            const linkText = this.textContent.trim();
+            if (linkText.includes('портфолио') || linkText.includes('Behance')) {
+                showNotification('Открываем портфолио в новой вкладке...');
+            }
+        });
+    });
+    
+    // Обработка кликов по услугам
+    const serviceCards = document.querySelectorAll('.service-card');
+    
+    serviceCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const serviceTitle = this.querySelector('.service-title').textContent;
+            showNotification(`Подробности об услуге "${serviceTitle}" можно узнать по телефону или email`);
+        });
+    });
+    
+    // Плавное появление статистики
+    const stats = document.querySelectorAll('.stat-number');
+    
+    function animateStats() {
+        stats.forEach(stat => {
+            const targetNumber = parseInt(stat.textContent.replace('+', ''));
+            const isPercent = stat.textContent.includes('%');
+            const hasPlus = stat.textContent.includes('+');
+            
+            let currentNumber = 0;
+            const increment = targetNumber / 50;
+            
+            const timer = setInterval(() => {
+                currentNumber += increment;
+                
+                if (currentNumber >= targetNumber) {
+                    currentNumber = targetNumber;
+                    clearInterval(timer);
+                }
+                
+                let displayNumber = Math.floor(currentNumber);
+                if (hasPlus) displayNumber += '+';
+                if (isPercent) displayNumber += '%';
+                
+                stat.textContent = displayNumber;
+            }, 30);
+        });
+    }
+    
+    // Запуск анимации статистики при скролле до секции "О себе"
+    const aboutSection = document.querySelector('#about');
+    let statsAnimated = false;
+    
+    function checkStatsAnimation() {
+        if (statsAnimated) return;
+        
+        const aboutTop = aboutSection.offsetTop;
+        const aboutHeight = aboutSection.offsetHeight;
+        const scrollTop = window.pageYOffset;
+        const windowHeight = window.innerHeight;
+        
+        if (scrollTop + windowHeight > aboutTop + aboutHeight / 2) {
+            animateStats();
+            statsAnimated = true;
+        }
+    }
+    
+    window.addEventListener('scroll', checkStatsAnimation);
+    
+    // Проверяем сразу при загрузке
+    checkStatsAnimation();
+    
+    // Обработка контактных форм и email
+    const emailLinks = document.querySelectorAll('a[href^="mailto:"]');
+    
+    emailLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            showNotification('Открываем почтовый клиент...');
+        });
+    });
+    
+    // Добавляем обработчик для ESC (закрытие уведомлений)
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const notifications = document.querySelectorAll('.copy-notification');
+            notifications.forEach(notification => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            });
+        }
+    });
+    
+    // Добавляем плавный скролл для всех внутренних якорей
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Улучшенная обработка resize для оптимизации
+    let resizeTimeout;
+    
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            // Пересчитываем позиции при изменении размера окна
+            highlightCurrentSection();
+            animateOnScroll();
+        }, 250);
+    });
+    
+    // Preload для улучшения производительности
+    const preloadImages = () => {
+        const images = ['favicon.svg'];
+        images.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+    };
+    
+    preloadImages();
+    
+    // Accessibility improvements
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Tab') {
+            document.body.classList.add('keyboard-navigation');
+        }
+    });
+    
+    document.addEventListener('mousedown', function() {
+        document.body.classList.remove('keyboard-navigation');
+    });
+    
+    // Добавляем стили для keyboard navigation
     const style = document.createElement('style');
     style.textContent = `
-        .nav-link.active {
-            color: var(--black);
+        .keyboard-navigation *:focus {
+            outline: 2px solid #1a1a1a;
+            outline-offset: 2px;
         }
         
-        .nav-link.active::after {
-            width: 100%;
-        }
-        
-        .notification {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        @media (max-width: 768px) {
-            .notification {
-                right: 10px;
-                left: 10px;
-                text-align: center;
-            }
-        }
-        
-        /* Анимация для таймлайна */
-        .timeline-item {
-            opacity: 0;
-            transform: translateX(-20px);
-            animation: fadeInLeft 0.6s ease forwards;
-        }
-        
-        .timeline-item:nth-child(1) { animation-delay: 0.1s; }
-        .timeline-item:nth-child(2) { animation-delay: 0.2s; }
-        .timeline-item:nth-child(3) { animation-delay: 0.3s; }
-        .timeline-item:nth-child(4) { animation-delay: 0.4s; }
-        
-        @keyframes fadeInLeft {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        /* Анимация для портфолио */
-        .portfolio-item {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.6s ease forwards;
-        }
-        
-        .portfolio-item:nth-child(1) { animation-delay: 0.1s; }
-        .portfolio-item:nth-child(2) { animation-delay: 0.2s; }
-        .portfolio-item:nth-child(3) { animation-delay: 0.3s; }
-        .portfolio-item:nth-child(4) { animation-delay: 0.4s; }
-        
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @media (prefers-reduced-motion: reduce) {
-            .timeline-item,
-            .portfolio-item {
-                animation: none;
-                opacity: 1;
-                transform: none;
-            }
+        .keyboard-navigation .nav-link:focus,
+        .keyboard-navigation .contact-link:focus,
+        .keyboard-navigation .portfolio-link:focus {
+            outline: 2px solid #1a1a1a;
+            outline-offset: 4px;
         }
     `;
     document.head.appendChild(style);
+    
+    console.log('Сайт-визитка Роговой Кристины загружен успешно!');
 }); 
