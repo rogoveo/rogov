@@ -339,4 +339,130 @@ document.addEventListener('DOMContentLoaded', function() {
     document.head.appendChild(style);
     
     console.log('Сайт-визитка Роговой Кристины загружен успешно!');
-}); 
+});
+
+// Mobile Menu Functions
+function toggleMobileMenu() {
+    const navLinks = document.getElementById('nav-links');
+    const menuToggle = document.querySelector('.mobile-menu-toggle');
+    const overlay = document.getElementById('nav-overlay');
+    
+    navLinks.classList.toggle('active');
+    menuToggle.classList.toggle('active');
+    overlay.classList.toggle('active');
+    
+    // Prevent body scroll when menu is open
+    if (navLinks.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+function closeMobileMenu() {
+    const navLinks = document.getElementById('nav-links');
+    const menuToggle = document.querySelector('.mobile-menu-toggle');
+    const overlay = document.getElementById('nav-overlay');
+    
+    navLinks.classList.remove('active');
+    menuToggle.classList.remove('active');
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Project Modal Functions
+function showProjectDetails(projectName, year) {
+    const modal = document.getElementById('project-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalYear = document.getElementById('modal-year');
+    
+    modalTitle.textContent = projectName;
+    modalYear.textContent = `Год завершения: ${year}`;
+    
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Close modal on background click
+    modal.onclick = function(e) {
+        if (e.target === modal) {
+            closeProjectModal();
+        }
+    };
+}
+
+function closeProjectModal() {
+    const modal = document.getElementById('project-modal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Enhanced touch interactions for mobile
+if ('ontouchstart' in window) {
+    // Add touch-friendly classes
+    document.body.classList.add('touch-device');
+    
+    // Enhanced portfolio item interactions
+    const portfolioItems = document.querySelectorAll('.portfolio-item');
+    portfolioItems.forEach(item => {
+        let touchStartY = 0;
+        
+        item.addEventListener('touchstart', function(e) {
+            touchStartY = e.touches[0].clientY;
+            this.style.transform = 'translateY(-2px)';
+        });
+        
+        item.addEventListener('touchend', function(e) {
+            this.style.transform = '';
+            
+            // Check if it was a tap (not a scroll)
+            const touchEndY = e.changedTouches[0].clientY;
+            if (Math.abs(touchEndY - touchStartY) < 10) {
+                // Trigger click event
+                this.click();
+            }
+        });
+    });
+}
+
+// Close mobile menu when clicking on links
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('nav-link')) {
+        setTimeout(closeMobileMenu, 100);
+    }
+});
+
+// Close mobile menu on escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeMobileMenu();
+        closeProjectModal();
+    }
+});
+
+// Improved scroll behavior for mobile
+let lastScrollY = window.scrollY;
+const header = document.querySelector('.header');
+
+window.addEventListener('scroll', function() {
+    const currentScrollY = window.scrollY;
+    
+    // Auto-close mobile menu on scroll
+    if (Math.abs(currentScrollY - lastScrollY) > 50) {
+        closeMobileMenu();
+    }
+    
+    lastScrollY = currentScrollY;
+});
+
+// Add haptic feedback for supported devices
+function addHapticFeedback(element) {
+    if (navigator.vibrate && 'ontouchstart' in window) {
+        element.addEventListener('touchstart', function() {
+            navigator.vibrate(10); // Very light haptic feedback
+        });
+    }
+}
+
+// Apply haptic feedback to interactive elements
+const interactiveElements = document.querySelectorAll('.portfolio-item, .service-card, .nav-link, .btn');
+interactiveElements.forEach(addHapticFeedback); 

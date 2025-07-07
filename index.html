@@ -6,6 +6,8 @@
     <title>Рогова Кристина Алексеевна - Ведущий архитектор</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <meta name="htmx-config" content='{"scrollBehavior":"smooth"}'>
 </head>
 <body>
     <div class="container">
@@ -20,11 +22,40 @@
                 </div>
             </div>
             <nav class="nav">
-                <a href="#about" class="nav-link">О себе</a>
-                <a href="#experience" class="nav-link">Опыт</a>
-                <a href="#portfolio" class="nav-link">Портфолио</a>
-                <a href="#services" class="nav-link">Услуги</a>
-                <a href="#contact" class="nav-link">Контакты</a>
+                <!-- Mobile menu toggle -->
+                <button class="mobile-menu-toggle" 
+                        hx-post="#" 
+                        hx-trigger="click" 
+                        hx-swap="none"
+                        onclick="toggleMobileMenu()">
+                    <span class="hamburger"></span>
+                    <span class="hamburger"></span>
+                    <span class="hamburger"></span>
+                </button>
+                
+                <!-- Navigation links -->
+                <div class="nav-links" id="nav-links">
+                    <a href="#about" class="nav-link" 
+                       hx-trigger="click" 
+                       hx-swap="none"
+                       onclick="closeMobileMenu()">О себе</a>
+                    <a href="#experience" class="nav-link"
+                       hx-trigger="click" 
+                       hx-swap="none"
+                       onclick="closeMobileMenu()">Опыт</a>
+                    <a href="#portfolio" class="nav-link"
+                       hx-trigger="click" 
+                       hx-swap="none"
+                       onclick="closeMobileMenu()">Портфолио</a>
+                    <a href="#services" class="nav-link"
+                       hx-trigger="click" 
+                       hx-swap="none"
+                       onclick="closeMobileMenu()">Услуги</a>
+                    <a href="#contact" class="nav-link"
+                       hx-trigger="click" 
+                       hx-swap="none"
+                       onclick="closeMobileMenu()">Контакты</a>
+                </div>
             </nav>
         </header>
 
@@ -111,7 +142,11 @@
             <section id="portfolio" class="section section--portfolio">
                 <h2 class="section-title">Портфолио</h2>
                 <div class="portfolio-grid">
-                    <div class="portfolio-item" data-delay="0">
+                    <div class="portfolio-item" 
+                         data-delay="0"
+                         hx-trigger="click"
+                         hx-swap="none"
+                         onclick="showProjectDetails('Образовательный комплекс', '2024')">
                         <div class="portfolio-image">
                             <div class="portfolio-placeholder">Образовательный комплекс</div>
                         </div>
@@ -122,7 +157,11 @@
                         </div>
                     </div>
                     
-                    <div class="portfolio-item" data-delay="100">
+                    <div class="portfolio-item" 
+                         data-delay="100"
+                         hx-trigger="click"
+                         hx-swap="none"
+                         onclick="showProjectDetails('Детский сад', '2023')">
                         <div class="portfolio-image">
                             <div class="portfolio-placeholder">Детский сад</div>
                         </div>
@@ -133,7 +172,11 @@
                         </div>
                     </div>
                     
-                    <div class="portfolio-item" data-delay="200">
+                    <div class="portfolio-item" 
+                         data-delay="200"
+                         hx-trigger="click"
+                         hx-swap="none"
+                         onclick="showProjectDetails('Жилой комплекс', '2023')">
                         <div class="portfolio-image">
                             <div class="portfolio-placeholder">Жилой комплекс</div>
                         </div>
@@ -144,7 +187,11 @@
                         </div>
                     </div>
                     
-                    <div class="portfolio-item" data-delay="300">
+                    <div class="portfolio-item" 
+                         data-delay="300"
+                         hx-trigger="click"
+                         hx-swap="none"
+                         onclick="showProjectDetails('Общественное здание', '2022')">
                         <div class="portfolio-image">
                             <div class="portfolio-placeholder">Общественное здание</div>
                         </div>
@@ -220,6 +267,27 @@
             <p class="footer-text">&copy; 2024 Рогова Кристина Алексеевна. Ведущий архитектор.</p>
         </footer>
     </div>
+
+    <!-- Mobile Project Modal -->
+    <div id="project-modal" class="modal" hx-swap-oob="true">
+        <div class="modal-content" hx-trigger="click" hx-swap="none" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeProjectModal()">&times;</button>
+            <div id="modal-body">
+                <h3 id="modal-title"></h3>
+                <p id="modal-year"></p>
+                <p>Подробная информация о проекте скоро будет доступна в полном портфолио.</p>
+                <div class="modal-actions">
+                    <a href="https://disk.yandex.ru/d/lnpUQ20h_YfOKQ" target="_blank" class="btn btn-primary">
+                        Смотреть портфолио
+                    </a>
+                    <button onclick="closeProjectModal()" class="btn btn-secondary">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Overlay -->
+    <div id="nav-overlay" class="nav-overlay" onclick="closeMobileMenu()"></div>
 
     <script src="script.js"></script>
 </body>
