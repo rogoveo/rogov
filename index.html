@@ -12,22 +12,21 @@
 <body>
     <div class="container">
         <header class="header">
-            <div class="header-content">
-                <div class="profile-photo">
-                    <img src="https://mir-s3-cdn-cf.behance.net/user/230/f6b1f9213019837.65fac9be4ea1a.jpg" alt="Рогова Кристина Алексеевна">
-                </div>
-                <div class="header-text">
-                    <h1 class="name">Рогова Кристина Алексеевна</h1>
-                    <p class="title">Ведущий архитектор отдела концепции</p>
+            <div class="hero-section">
+                <div class="hero-content">
+                    <div class="hero-photo">
+                        <img src="https://mir-s3-cdn-cf.behance.net/user/230/f6b1f9213019837.65fac9be4ea1a.jpg" alt="Рогова Кристина Алексеевна">
+                    </div>
+                    <div class="hero-text">
+                        <h1 class="hero-name">Рогова<br>Кристина</h1>
+                        <p class="hero-subtitle">Ведущий архитектор<br><br>Специализируется на проектировании общественных и образовательных зданий<br><br>7 лет опыта в архитектурном проектировании и BIM-моделировании</p>
+                    </div>
                 </div>
             </div>
+            
             <nav class="nav">
                 <!-- Mobile menu toggle -->
-                <button class="mobile-menu-toggle" 
-                        hx-post="#" 
-                        hx-trigger="click" 
-                        hx-swap="none"
-                        onclick="toggleMobileMenu()">
+                <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
                     <span class="hamburger"></span>
                     <span class="hamburger"></span>
                     <span class="hamburger"></span>
@@ -35,62 +34,44 @@
                 
                 <!-- Navigation links -->
                 <div class="nav-links" id="nav-links">
-                    <a href="#about" class="nav-link" 
-                       hx-trigger="click" 
-                       hx-swap="none"
-                       onclick="closeMobileMenu()">О себе</a>
-                    <a href="#experience" class="nav-link"
-                       hx-trigger="click" 
-                       hx-swap="none"
-                       onclick="closeMobileMenu()">Опыт</a>
-                    <a href="#portfolio" class="nav-link"
-                       hx-trigger="click" 
-                       hx-swap="none"
-                       onclick="closeMobileMenu()">Портфолио</a>
-                    <a href="#services" class="nav-link"
-                       hx-trigger="click" 
-                       hx-swap="none"
-                       onclick="closeMobileMenu()">Услуги</a>
-                    <a href="#contact" class="nav-link"
-                       hx-trigger="click" 
-                       hx-swap="none"
-                       onclick="closeMobileMenu()">Контакты</a>
+                    <a href="#about" class="nav-link" onclick="closeMobileMenu()">Обо мне</a>
+                    <a href="#experience" class="nav-link" onclick="closeMobileMenu()">Опыт</a>
+                    <a href="#portfolio" class="nav-link" onclick="closeMobileMenu()">Архитектура</a>
+                    <a href="#services" class="nav-link" onclick="closeMobileMenu()">Услуги</a>
+                    <a href="#contact" class="nav-link" onclick="closeMobileMenu()">Контакты</a>
                 </div>
             </nav>
         </header>
 
         <main class="main">
-            <section id="about" class="section section--about">
-                <h2 class="section-title">О себе</h2>
+            <section id="about" class="section">
+                <h2 class="section-title">Обо мне</h2>
                 <div class="about-content">
                     <p class="about-text">
-                        Ведущий архитектор с 7-летним опытом работы в проектировании общественных, образовательных и жилых зданий. 
-                        Специализируюсь на разработке концепций социальных объектов, участии в конкурсных проектах и координации 
-                        междисциплинарных команд.
+                        Ведущий архитектор с 7-летним опытом проектирования общественных и образовательных зданий.
                     </p>
                     <p class="about-text">
-                        Имею опыт работы с проектами различного масштаба - от детских садов до крупных образовательных комплексов. 
-                        Владею современными BIM-технологиями и программными решениями для архитектурного проектирования.
+                        Специализируется на разработке концепций социальных объектов, BIM-моделировании и координации междисциплинарных команд. Работает с проектами различного масштаба — от детских садов до крупных образовательных комплексов.
                     </p>
                     <div class="about-stats">
                         <div class="stat">
-                            <span class="stat-number">7</span>
-                            <span class="stat-label">лет опыта</span>
+                            <span class="stat-number">2018</span>
+                            <span class="stat-label">Начало карьеры</span>
                         </div>
                         <div class="stat">
                             <span class="stat-number">50+</span>
-                            <span class="stat-label">проектов</span>
+                            <span class="stat-label">Проектов</span>
                         </div>
                         <div class="stat">
-                            <span class="stat-number">100%</span>
-                            <span class="stat-label">качество</span>
+                            <span class="stat-number">2</span>
+                            <span class="stat-label">Компании</span>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section id="experience" class="section section--experience">
-                <h2 class="section-title">Опыт работы</h2>
+            <section id="experience" class="section">
+                <h2 class="section-title">Опыт</h2>
                 <div class="timeline">
                     <div class="timeline-item" data-delay="0">
                         <div class="timeline-marker"></div>
@@ -139,13 +120,11 @@
                 </div>
             </section>
 
-            <section id="portfolio" class="section section--portfolio">
-                <h2 class="section-title">Портфолио</h2>
+            <section id="portfolio" class="section">
+                <h2 class="section-title">Архитектура</h2>
                 <div class="portfolio-grid">
                     <div class="portfolio-item" 
                          data-delay="0"
-                         hx-trigger="click"
-                         hx-swap="none"
                          onclick="showProjectDetails('Образовательный комплекс', '2024')">
                         <div class="portfolio-image">
                             <div class="portfolio-placeholder">Образовательный комплекс</div>
@@ -159,8 +138,6 @@
                     
                     <div class="portfolio-item" 
                          data-delay="100"
-                         hx-trigger="click"
-                         hx-swap="none"
                          onclick="showProjectDetails('Детский сад', '2023')">
                         <div class="portfolio-image">
                             <div class="portfolio-placeholder">Детский сад</div>
@@ -174,8 +151,6 @@
                     
                     <div class="portfolio-item" 
                          data-delay="200"
-                         hx-trigger="click"
-                         hx-swap="none"
                          onclick="showProjectDetails('Жилой комплекс', '2023')">
                         <div class="portfolio-image">
                             <div class="portfolio-placeholder">Жилой комплекс</div>
@@ -189,8 +164,6 @@
                     
                     <div class="portfolio-item" 
                          data-delay="300"
-                         hx-trigger="click"
-                         hx-swap="none"
                          onclick="showProjectDetails('Общественное здание', '2022')">
                         <div class="portfolio-image">
                             <div class="portfolio-placeholder">Общественное здание</div>
@@ -212,7 +185,7 @@
                 </div>
             </section>
 
-            <section id="services" class="section section--services">
+            <section id="services" class="section">
                 <h2 class="section-title">Услуги</h2>
                 <div class="services-grid">
                     <div class="service-card" data-delay="0">
@@ -237,7 +210,7 @@
                 </div>
             </section>
 
-            <section id="contact" class="section section--contact">
+            <section id="contact" class="section">
                 <h2 class="section-title">Контакты</h2>
                 <div class="contact-content">
                     <div class="contact-info">
@@ -269,8 +242,8 @@
     </div>
 
     <!-- Mobile Project Modal -->
-    <div id="project-modal" class="modal" hx-swap-oob="true">
-        <div class="modal-content" hx-trigger="click" hx-swap="none" onclick="event.stopPropagation()">
+    <div id="project-modal" class="modal">
+        <div class="modal-content" onclick="event.stopPropagation()">
             <button class="modal-close" onclick="closeProjectModal()">&times;</button>
             <div id="modal-body">
                 <h3 id="modal-title"></h3>
