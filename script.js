@@ -168,10 +168,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const portfolioItems = document.querySelectorAll('.portfolio-item');
     
     portfolioItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const projectTitle = this.querySelector('.portfolio-title').textContent;
-            showNotification(`Подробности проекта "${projectTitle}" скоро будут доступны`);
-        });
+        // Показываем уведомление только для элементов без обработчика
+        if (!item.hasAttribute('onclick')) {
+            item.addEventListener('click', function() {
+                const projectTitle = this.querySelector('.portfolio-title').textContent;
+                showNotification(`Подробности проекта "${projectTitle}" скоро будут доступны`);
+            });
+        }
     });
     
     // Обработка внешних ссылок
