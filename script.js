@@ -469,3 +469,6 @@ function addHapticFeedback(element) {
 // Apply haptic feedback to interactive elements
 const interactiveElements = document.querySelectorAll('.portfolio-item, .service-card, .nav-link, .btn');
 interactiveElements.forEach(addHapticFeedback); 
+if (typeof module !== "undefined") {
+    module.exports = { toggleMobileMenu, closeMobileMenu };
+}

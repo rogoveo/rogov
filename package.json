@@ -1,0 +1,13 @@
+{
+  "name": "rogov",
+  "version": "1.0.0",
+  "description": "Минималистичный сайт-визитка ведущего архитектора в стиле современного архитектурного дизайна.",
+  "main": "script.js",
+  "scripts": {
+    "test": "node --test \"tests/*.js\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
